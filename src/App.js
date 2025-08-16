@@ -5,6 +5,9 @@ const CryptoPnLCards = () => {
     const [prices, setPrices] = useState({});
     const [loading, setLoading] = useState(true);
     const [currency, setCurrency] = useState('AUD'); // 'AUD' or 'USD'
+    const [totalValueAUD, setTotalValueAUD] = useState(0);
+    const [totalBuyCostAUD, setTotalBuyCostAUD] = useState(0);
+    const [totalValueDiffAUD, setTotalValueDiffAUD] = useState(0);
 
     const portfolio = {
         BTC: { buyCostAUD: 15460, units: 0.09017469 },
@@ -29,6 +32,19 @@ const CryptoPnLCards = () => {
                 },
                 XLM: { usd: data.stellar.usd, aud: data.stellar.aud },
             });
+
+            const buyCostAUD = Object.values(portfolio).reduce(
+                (total, asset) => total + asset.buyCostAUD,
+                0
+            );
+            const buyValueAUD =
+                portfolio.BTC.units * data.bitcoin.aud +
+                portfolio.HBAR.units * data['hedera-hashgraph'].aud +
+                portfolio.XRP.units * data.ripple.aud +
+                portfolio.XLM.units * data.stellar.aud;
+            setTotalBuyCostAUD(buyCostAUD);
+            setTotalValueAUD(buyValueAUD);
+            setTotalValueDiffAUD(buyValueAUD - buyCostAUD);
         } catch (err) {
             console.error('Failed to fetch prices:', err);
         } finally {
@@ -66,15 +82,19 @@ const CryptoPnLCards = () => {
                     </p>
                     {currency === 'AUD' && (
                         <p>
-                            AUD: ${currentValueAUD.toFixed(2)} (
-                            {buyCostAUD.toFixed(2)})({valueDiffAUD.toFixed(2)})
+                            AUD: ${currentValueAUD.toLocaleString()} (
+                            {buyCostAUD.toLocaleString()})(
+                            {valueDiffAUD.toLocaleString()})
                         </p>
                     )}
-                    {kidsPL > 0 && <p>Kids Profit/Loss: {kidsPL.toFixed(2)}</p>}
+                    {currency === 'AUD' && kidsPL > 0 && (
+                        <p>Kids Profit/Loss: {kidsPL.toLocaleString()}</p>
+                    )}
                     {currency !== 'AUD' && (
                         <p>
-                            USD: ${currentValueUSD.toFixed(2)} (
-                            {buyCostUSD.toFixed(2)})({valueDiffUSD.toFixed(2)})
+                            USD: ${currentValueUSD.toLocaleString()} (
+                            {buyCostUSD.toLocaleString()})(
+                            {valueDiffUSD.toLocaleString()})
                         </p>
                     )}
                 </p>
@@ -84,14 +104,16 @@ const CryptoPnLCards = () => {
                     </p>
                     {currency === 'AUD' && (
                         <p>
-                            AUD: ${current?.aud.toFixed(3)} (
-                            {buyPriceAUD.toFixed(3)})({priceDiffAUD.toFixed(3)})
+                            AUD: ${current?.aud.toLocaleString()} (
+                            {buyPriceAUD.toLocaleString()})(
+                            {priceDiffAUD.toLocaleString()})
                         </p>
                     )}
                     {currency !== 'AUD' && (
                         <p>
-                            USD: ${current?.usd.toFixed(3)} (
-                            {buyPriceUSD.toFixed(3)})({priceDiffUSD.toFixed(3)})
+                            USD: ${current?.usd.toLocaleString()} (
+                            {buyPriceUSD.toLocaleString()})(
+                            {priceDiffUSD.toLocaleString()})
                         </p>
                     )}
                 </p>
@@ -117,6 +139,22 @@ const CryptoPnLCards = () => {
                     USD
                 </button>
             </div>
+
+            {currency === 'AUD' && (
+                <div>
+                    <h3>Total: CurrentValue(BuyCost)(Profit/Loss)</h3>
+                    <p
+                        className={
+                            totalValueAUD > totalBuyCostAUD ? 'profit' : 'loss'
+                        }
+                    >
+                        ${totalValueAUD.toLocaleString()} (
+                        {totalBuyCostAUD.toLocaleString()})(
+                        {totalValueDiffAUD.toLocaleString()})
+                    </p>
+                </div>
+            )}
+
             {loading ? (
                 <p>Loading prices...</p>
             ) : (
