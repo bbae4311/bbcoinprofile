@@ -71,6 +71,18 @@ const CryptoPnLCards = () => {
         const isProfit = valueDiffAUD > 0;
         const kidsPL = symbol === 'BTC' ? (valueDiffAUD * 500) / buyCostAUD : 0;
 
+        const handleClick = (symbol) => {
+            let code = 'bitcoin';
+            if (symbol === 'XRP') code = 'xrp';
+            else if (symbol === 'HBAR') code = 'hedera';
+            else if (symbol === 'XLM') code = 'stellar';
+
+            window.open(
+                'https://www.coingecko.com/en/coins/' + code + '/' + currency,
+                '_blank'
+            );
+        };
+
         return (
             <div className='card' key={symbol}>
                 <h3>
@@ -116,6 +128,9 @@ const CryptoPnLCards = () => {
                             {priceDiffUSD.toLocaleString()})
                         </p>
                     )}
+                </p>
+                <p>
+                    <button onClick={() => handleClick(symbol)}>Chart</button>
                 </p>
             </div>
         );
