@@ -11,26 +11,25 @@ const CryptoPnLCards = () => {
 
     const portfolio = {
         BTC: { buyCostAUD: 15460, units: 0.09017469 },
-        HBAR: { buyCostAUD: 5000, units: 11857.15 },
         XRP: { buyCostAUD: 15460, units: 3148.962 },
         XLM: { buyCostAUD: 1000, units: 1508.5 },
+        XDC: { buyCostAUD: 1000, units: 7468.84244715 },
+        HBAR: { buyCostAUD: 5000, units: 11857.15 },
     };
 
     const fetchPrices = async () => {
         setLoading(true);
         try {
             const res = await fetch(
-                'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ripple,hedera-hashgraph,stellar&vs_currencies=usd,aud'
+                'https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,XRP,XLM,XDC,HBAR&tsyms=USD,AUD&api_key=YOUR_API_KEY'
             );
             const data = await res.json();
             setPrices({
-                BTC: { usd: data.bitcoin.usd, aud: data.bitcoin.aud },
-                XRP: { usd: data.ripple.usd, aud: data.ripple.aud },
-                HBAR: {
-                    usd: data['hedera-hashgraph'].usd,
-                    aud: data['hedera-hashgraph'].aud,
-                },
-                XLM: { usd: data.stellar.usd, aud: data.stellar.aud },
+                BTC: { usd: data.BTC.USD, aud: data.BTC.AUD },
+                XRP: { usd: data.XRP.USD, aud: data.XRP.AUD },
+                XLM: { usd: data.XLM.USD, aud: data.XLM.AUD },
+                XDC: { usd: data.XDC.USD, aud: data.XDC.AUD },
+                HBAR: { usd: data.HBAR.USD, aud: data.HBAR.AUD },
             });
 
             const buyCostAUD = Object.values(portfolio).reduce(
@@ -38,10 +37,11 @@ const CryptoPnLCards = () => {
                 0
             );
             const buyValueAUD =
-                portfolio.BTC.units * data.bitcoin.aud +
-                portfolio.HBAR.units * data['hedera-hashgraph'].aud +
-                portfolio.XRP.units * data.ripple.aud +
-                portfolio.XLM.units * data.stellar.aud;
+                portfolio.BTC.units * data.BTC.AUD +
+                portfolio.HBAR.units * data.HBAR.AUD +
+                portfolio.XRP.units * data.XRP.AUD +
+                portfolio.XLM.units * data.XLM.AUD +
+                portfolio.XDC.units * data.XDC.AUD;
             setTotalBuyCostAUD(buyCostAUD);
             setTotalValueAUD(buyValueAUD);
             setTotalValueDiffAUD(buyValueAUD - buyCostAUD);
@@ -76,6 +76,7 @@ const CryptoPnLCards = () => {
             if (symbol === 'XRP') code = 'xrp';
             else if (symbol === 'HBAR') code = 'hedera';
             else if (symbol === 'XLM') code = 'stellar';
+            else if (symbol === 'XDC') code = 'xdc-network';
 
             window.open(
                 'https://www.coingecko.com/en/coins/' + code + '/' + currency,
