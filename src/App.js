@@ -11,17 +11,26 @@ const CryptoPnLCards = () => {
 
     const portfolio = {
         BTC: { buyCostAUD: 15460, units: 0.09017469 },
-        XRP: { buyCostAUD: 15460, units: 3148.962 },
+        XRP: { buyCostAUD: 17502.21, units: 3596.385344 },
         XLM: { buyCostAUD: 1000, units: 1508.5 },
         XDC: { buyCostAUD: 1000, units: 7468.84244715 },
         HBAR: { buyCostAUD: 5000, units: 11857.15 },
+        SOL: { buyCostAUD: 356.1552, units: 1.02434524 },
+        DOGE: { buyCostAUD: 200, units: 619.38 },
+        SHIB: { buyCostAUD: 94.34, units: 4839385.6 },
+        PENGU: { buyCostAUD: 100, units: 2591.2 },
     };
+
+    function dollarFormat(num) {
+        if (num < 0.01) return num.toFixed(6);
+        else return num.toFixed(2);
+    }
 
     const fetchPrices = async () => {
         setLoading(true);
         try {
             const res = await fetch(
-                'https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,XRP,XLM,XDC,HBAR&tsyms=USD,AUD&api_key=YOUR_API_KEY'
+                'https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,XRP,XLM,XDC,HBAR,SOL,DOGE,SHIB,PENGU&tsyms=USD,AUD&api_key=YOUR_API_KEY'
             );
             const data = await res.json();
             setPrices({
@@ -30,6 +39,10 @@ const CryptoPnLCards = () => {
                 XLM: { usd: data.XLM.USD, aud: data.XLM.AUD },
                 XDC: { usd: data.XDC.USD, aud: data.XDC.AUD },
                 HBAR: { usd: data.HBAR.USD, aud: data.HBAR.AUD },
+                SOL: { usd: data.SOL.USD, aud: data.SOL.AUD },
+                DOGE: { usd: data.DOGE.USD, aud: data.DOGE.AUD },
+                SHIB: { usd: data.SHIB.USD, aud: data.SHIB.AUD },
+                PENGU: { usd: data.PENGU.USD, aud: data.PENGU.AUD },
             });
 
             const buyCostAUD = Object.values(portfolio).reduce(
@@ -41,7 +54,11 @@ const CryptoPnLCards = () => {
                 portfolio.HBAR.units * data.HBAR.AUD +
                 portfolio.XRP.units * data.XRP.AUD +
                 portfolio.XLM.units * data.XLM.AUD +
-                portfolio.XDC.units * data.XDC.AUD;
+                portfolio.XDC.units * data.XDC.AUD +
+                portfolio.SOL.units * data.SOL.AUD +
+                portfolio.DOGE.units * data.DOGE.AUD +
+                portfolio.SHIB.units * data.SHIB.AUD +
+                portfolio.PENGU.units * data.PENGU.AUD;
             setTotalBuyCostAUD(buyCostAUD);
             setTotalValueAUD(buyValueAUD);
             setTotalValueDiffAUD(buyValueAUD - buyCostAUD);
@@ -77,6 +94,10 @@ const CryptoPnLCards = () => {
             else if (symbol === 'HBAR') code = 'hedera';
             else if (symbol === 'XLM') code = 'stellar';
             else if (symbol === 'XDC') code = 'xdc-network';
+            else if (symbol === 'SOL') code = 'solana';
+            else if (symbol === 'DOGE') code = 'dogecoin';
+            else if (symbol === 'SHIB') code = 'shiba-inu';
+            else if (symbol === 'PENGU') code = 'pudgy-penguins';
 
             window.open(
                 'https://www.coingecko.com/en/coins/' + code + '/' + currency,
@@ -95,19 +116,21 @@ const CryptoPnLCards = () => {
                     </p>
                     {currency === 'AUD' && (
                         <p>
-                            AUD: ${currentValueAUD.toLocaleString()} (
-                            {buyCostAUD.toLocaleString()})(
-                            {valueDiffAUD.toLocaleString()})
+                            AUD: ${dollarFormat(currentValueAUD)} (
+                            {dollarFormat(buyCostAUD)})(
+                            {dollarFormat(valueDiffAUD)})(
+                            {((valueDiffAUD / buyCostAUD) * 100).toFixed(2)}%)
                         </p>
                     )}
                     {currency === 'AUD' && kidsPL > 0 && (
-                        <p>Kids Profit/Loss: {kidsPL.toLocaleString()}</p>
+                        <p>Kids Profit/Loss: {kidsPL.toFixed(6)}</p>
                     )}
                     {currency !== 'AUD' && (
                         <p>
-                            USD: ${currentValueUSD.toLocaleString()} (
-                            {buyCostUSD.toLocaleString()})(
-                            {valueDiffUSD.toLocaleString()})
+                            USD: ${dollarFormat(currentValueUSD)} (
+                            {dollarFormat(buyCostUSD)})(
+                            {dollarFormat(valueDiffUSD)})(
+                            {((valueDiffUSD / buyCostUSD) * 100).toFixed(2)}%)
                         </p>
                     )}
                 </p>
@@ -117,16 +140,16 @@ const CryptoPnLCards = () => {
                     </p>
                     {currency === 'AUD' && (
                         <p>
-                            AUD: ${current?.aud.toLocaleString()} (
-                            {buyPriceAUD.toLocaleString()})(
-                            {priceDiffAUD.toLocaleString()})
+                            AUD: ${dollarFormat(current?.aud)} (
+                            {dollarFormat(buyPriceAUD)})(
+                            {dollarFormat(priceDiffAUD)})
                         </p>
                     )}
                     {currency !== 'AUD' && (
                         <p>
-                            USD: ${current?.usd.toLocaleString()} (
-                            {buyPriceUSD.toLocaleString()})(
-                            {priceDiffUSD.toLocaleString()})
+                            USD: ${dollarFormat(current?.usd)} (
+                            {dollarFormat(buyPriceUSD)})(
+                            {dollarFormat(priceDiffUSD)})
                         </p>
                     )}
                 </p>
@@ -164,9 +187,13 @@ const CryptoPnLCards = () => {
                             totalValueAUD > totalBuyCostAUD ? 'profit' : 'loss'
                         }
                     >
-                        ${totalValueAUD.toLocaleString()} (
-                        {totalBuyCostAUD.toLocaleString()})(
-                        {totalValueDiffAUD.toLocaleString()})
+                        ${dollarFormat(totalValueAUD)} (
+                        {dollarFormat(totalBuyCostAUD)})(
+                        {dollarFormat(totalValueDiffAUD)})(
+                        {((totalValueDiffAUD / totalBuyCostAUD) * 100).toFixed(
+                            2
+                        )}
+                        %)
                     </p>
                 </div>
             )}
