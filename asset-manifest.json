@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/bbcoinprofile/static/css/main.d5be9b8a.css",
-    "main.js": "/bbcoinprofile/static/js/main.6e6c9d9c.js",
+    "main.js": "/bbcoinprofile/static/js/main.4471035c.js",
     "static/js/453.715ee3c2.chunk.js": "/bbcoinprofile/static/js/453.715ee3c2.chunk.js",
     "index.html": "/bbcoinprofile/index.html",
     "main.d5be9b8a.css.map": "/bbcoinprofile/static/css/main.d5be9b8a.css.map",
-    "main.6e6c9d9c.js.map": "/bbcoinprofile/static/js/main.6e6c9d9c.js.map",
+    "main.4471035c.js.map": "/bbcoinprofile/static/js/main.4471035c.js.map",
     "453.715ee3c2.chunk.js.map": "/bbcoinprofile/static/js/453.715ee3c2.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.d5be9b8a.css",
-    "static/js/main.6e6c9d9c.js"
+    "static/js/main.4471035c.js"
   ]
 }
