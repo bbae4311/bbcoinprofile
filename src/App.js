@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
+
 import './CryptoPnLCards.css';
 
 const CryptoPnLCards = () => {
@@ -162,49 +165,64 @@ const CryptoPnLCards = () => {
 
     return (
         <div className='container'>
-            <h2>💰 Crypto Portfolio ({currency})</h2>
-            <button onClick={fetchPrices}>🔄 Refresh</button>
-            <div className='toggle-group'>
-                <button
-                    className={currency === 'AUD' ? 'active' : ''}
-                    onClick={() => setCurrency('AUD')}
-                >
-                    AUD
-                </button>
-                <button
-                    className={currency === 'USD' ? 'active' : ''}
-                    onClick={() => setCurrency('USD')}
-                >
-                    USD
-                </button>
-            </div>
+            <Tabs>
+                <TabList>
+                    <Tab>Coin</Tab>
+                    <Tab>Stock</Tab>
+                </TabList>
 
-            {currency === 'AUD' && (
-                <div>
-                    <h3>Total: CurrentValue(BuyCost)(Profit/Loss)</h3>
-                    <p
-                        className={
-                            totalValueAUD > totalBuyCostAUD ? 'profit' : 'loss'
-                        }
-                    >
-                        ${dollarFormat(totalValueAUD)} (
-                        {dollarFormat(totalBuyCostAUD)})(
-                        {dollarFormat(totalValueDiffAUD)})(
-                        {((totalValueDiffAUD / totalBuyCostAUD) * 100).toFixed(
-                            2
-                        )}
-                        %)
-                    </p>
-                </div>
-            )}
+                <TabPanel>
+                    <h2>💰 Crypto Portfolio ({currency})</h2>
+                    <button onClick={fetchPrices}>🔄 Refresh</button>
+                    <div className='toggle-group'>
+                        <button
+                            className={currency === 'AUD' ? 'active' : ''}
+                            onClick={() => setCurrency('AUD')}
+                        >
+                            AUD
+                        </button>
+                        <button
+                            className={currency === 'USD' ? 'active' : ''}
+                            onClick={() => setCurrency('USD')}
+                        >
+                            USD
+                        </button>
+                    </div>
 
-            {loading ? (
-                <p>Loading prices...</p>
-            ) : (
-                <div className='card-list'>
-                    {Object.keys(portfolio).map(renderCard)}
-                </div>
-            )}
+                    {currency === 'AUD' && (
+                        <div>
+                            <h3>Total: CurrentValue(BuyCost)(Profit/Loss)</h3>
+                            <p
+                                className={
+                                    totalValueAUD > totalBuyCostAUD
+                                        ? 'profit'
+                                        : 'loss'
+                                }
+                            >
+                                ${dollarFormat(totalValueAUD)} (
+                                {dollarFormat(totalBuyCostAUD)})(
+                                {dollarFormat(totalValueDiffAUD)})(
+                                {(
+                                    (totalValueDiffAUD / totalBuyCostAUD) *
+                                    100
+                                ).toFixed(2)}
+                                %)
+                            </p>
+                        </div>
+                    )}
+
+                    {loading ? (
+                        <p>Loading prices...</p>
+                    ) : (
+                        <div className='card-list'>
+                            {Object.keys(portfolio).map(renderCard)}
+                        </div>
+                    )}
+                </TabPanel>
+                <TabPanel>
+                    <h2>💰 Stock Portfolio</h2>
+                </TabPanel>
+            </Tabs>
         </div>
     );
 };
