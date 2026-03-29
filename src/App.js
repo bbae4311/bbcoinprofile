@@ -21,8 +21,8 @@ const CryptoPnLCards = () => {
 
     const portfolio = {
         BTC: { buyCostAUD: 15460, units: 0.09017469 },
-        XRP: { buyCostAUD: 22652.21, units: 5353.007347 },
-        XLM: { buyCostAUD: 1000, units: 1508.5 },
+        XRP: { buyCostAUD: 32652.21, units: 10374.038348 },
+        XLM: { buyCostAUD: 2000, units: 6003.2940085 },
         XDC: { buyCostAUD: 1000, units: 7468.84244715 },
         HBAR: { buyCostAUD: 5000, units: 11857.15 },
         SOL: { buyCostAUD: 356.1552, units: 1.02434524 },
@@ -51,7 +51,7 @@ const CryptoPnLCards = () => {
         setLoading(true);
         try {
             const res = await fetch(
-                'https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,XRP,XLM,XDC,HBAR,SOL,DOGE,SHIB,PENGU&tsyms=USD,AUD&api_key=YOUR_API_KEY'
+                'https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,XRP,XLM,XDC,HBAR,SOL,DOGE,SHIB,PENGU&tsyms=USD,AUD&api_key=YOUR_API_KEY',
             );
             const data = await res.json();
             setPrices({
@@ -68,7 +68,7 @@ const CryptoPnLCards = () => {
 
             const buyCostAUD = Object.values(portfolio).reduce(
                 (total, asset) => total + asset.buyCostAUD,
-                0
+                0,
             );
             const buyValueAUD =
                 portfolio.BTC.units * data.BTC.AUD +
@@ -100,7 +100,7 @@ const CryptoPnLCards = () => {
 
             const buyCostAUDUSDStock = Object.values(portfolioUSDStock).reduce(
                 (total, asset) => total + asset.buyCostUSD * usdInAud,
-                0
+                0,
             );
             const buyValueAUDUSDStock =
                 portfolioUSDStock.TSLA.units * stockPrices.TSLA.usd * usdInAud +
@@ -111,7 +111,7 @@ const CryptoPnLCards = () => {
             setTotalBuyCostAUDUSDStock(buyCostAUDUSDStock);
             setTotalValueAUDUSDStock(buyValueAUDUSDStock);
             setTotalValueDiffAUDUSDStock(
-                buyValueAUDUSDStock - buyCostAUDUSDStock
+                buyValueAUDUSDStock - buyCostAUDUSDStock,
             );
         } catch (err) {
             console.error('Failed to fetch prices:', err);
@@ -122,7 +122,7 @@ const CryptoPnLCards = () => {
 
     const fetchStock = async (symbol) => {
         const res = await fetch(
-            `https://financialmodelingprep.com/stable/profile?symbol=${symbol}&apikey=oEYMZph8K9oYYxYtWDhyVV6TVabSCf1v`
+            `https://financialmodelingprep.com/stable/profile?symbol=${symbol}&apikey=oEYMZph8K9oYYxYtWDhyVV6TVabSCf1v`,
         );
         const data = await res.json();
 
@@ -161,7 +161,7 @@ const CryptoPnLCards = () => {
 
             window.open(
                 'https://www.coingecko.com/en/coins/' + code + '/' + currency,
-                '_blank'
+                '_blank',
             );
         };
 
@@ -276,7 +276,7 @@ const CryptoPnLCards = () => {
                     AUD: ${dollarFormat(totalValueAUD + totalValueAUDUSDStock)}{' '}
                     ({dollarFormat(totalBuyCostAUD + totalBuyCostAUDUSDStock)})(
                     {dollarFormat(
-                        totalValueDiffAUD + totalValueDiffAUDUSDStock
+                        totalValueDiffAUD + totalValueDiffAUDUSDStock,
                     )}
                     )(
                     {(
@@ -371,7 +371,7 @@ const CryptoPnLCards = () => {
                     ) : (
                         <div className='card-list'>
                             {Object.keys(portfolioUSDStock).map(
-                                renderCardUSDStock
+                                renderCardUSDStock,
                             )}
                         </div>
                     )}
